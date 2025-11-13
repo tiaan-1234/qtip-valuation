@@ -239,6 +239,8 @@ docker compose up
 
 ### Required Deliverables
 
+Please submit all the the following via a public Github repository that we can access:
+
 1. **Source code**
    - Frontend implementation
    - Backend implementation
