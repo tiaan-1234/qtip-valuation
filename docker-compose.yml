@@ -16,7 +16,7 @@ services:
   backend:
     build: ./backend/QTip.Api
     ports:
-      - "5000:8080"
+      - "5001:8080"
     environment:
       - ConnectionStrings__Default=Host=db;Database=qtip;Username=qtip;Password=qtip
     depends_on:
