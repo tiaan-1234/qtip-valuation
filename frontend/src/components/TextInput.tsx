@@ -1,0 +1,68 @@
+import { useCallback, useRef, useState } from 'react';
+
+interface TextInputProps {
+  value: string;
+  onChange: (value: string) => void;
+  disabled?: boolean;
+}
+
+const EMAIL_REGEX = /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g;
+
+export function TextInput({ value, onChange, disabled }: TextInputProps) {
+  const [tooltip, setTooltip] = useState<{ x: number; y: number } | null>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  const highlightedHtml = useCallback(() => {
+    const escaped = value
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/\n/g, '<br/>');
+
+    return escaped.replace(
+      EMAIL_REGEX,
+      '<span class="email-highlight" data-pii="true">$&</span>'
+    );
+  }, [value]);
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    const target = e.target as HTMLElement;
+    if (target.dataset.pii === 'true') {
+      const rect = containerRef.current?.getBoundingClientRect();
+      if (rect) {
+        setTooltip({ x: e.clientX - rect.left, y: e.clientY - rect.top - 30 });
+      }
+    } else {
+      setTooltip(null);
+    }
+  };
+
+  const handleMouseLeave = () => setTooltip(null);
+
+  return (
+    <div className="text-input-container" ref={containerRef}>
+      <div
+        className="text-input-backdrop"
+        dangerouslySetInnerHTML={{ __html: highlightedHtml() }}
+        onMouseMove={handleMouseMove}
+        onMouseLeave={handleMouseLeave}
+      />
+      <textarea
+        className="text-input-textarea"
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        disabled={disabled}
+        placeholder="Enter text containing email addresses..."
+        rows={8}
+      />
+      {tooltip && (
+        <div
+          className="tooltip"
+          style={{ left: tooltip.x, top: tooltip.y }}
+        >
+          PII – Email Address
+        </div>
+      )}
+    </div>
+  );
+}
