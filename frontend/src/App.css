@@ -33,8 +33,25 @@ main {
   background: #fff;
 }
 
+.text-input-textarea {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  min-height: 200px;
+  padding: 12px;
+  font-family: inherit;
+  font-size: 16px;
+  line-height: 1.5;
+  border: none;
+  background: transparent;
+  resize: vertical;
+  outline: none;
+  box-sizing: border-box;
+}
+
 .text-input-backdrop {
   position: absolute;
+  z-index: 2;
   top: 0;
   left: 0;
   right: 0;
@@ -56,22 +73,7 @@ main {
   text-decoration-thickness: 2px;
   color: transparent;
   pointer-events: auto;
-  cursor: pointer;
-}
-
-.text-input-textarea {
-  position: relative;
-  width: 100%;
-  min-height: 200px;
-  padding: 12px;
-  font-family: inherit;
-  font-size: 16px;
-  line-height: 1.5;
-  border: none;
-  background: transparent;
-  resize: vertical;
-  outline: none;
-  box-sizing: border-box;
+  cursor: help;
 }
 
 .text-input-textarea:focus {
@@ -86,6 +88,7 @@ main {
 /* Tooltip */
 .tooltip {
   position: absolute;
+  transform: translate(-50%, -100%);
   background: #333;
   color: #fff;
   padding: 6px 10px;
