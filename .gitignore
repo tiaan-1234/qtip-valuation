@@ -14,7 +14,7 @@ obj/
 # macOS
 .DS_Store
 
-# Node (for frontend later)
+# Node
 node_modules/
 dist/
 
