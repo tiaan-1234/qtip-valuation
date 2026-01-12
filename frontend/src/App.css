@@ -73,7 +73,7 @@ main {
   text-decoration-thickness: 2px;
   color: transparent;
   pointer-events: auto;
-  cursor: pointer;
+  cursor: help;
 }
 
 .text-input-textarea:focus {
