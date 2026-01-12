@@ -1,261 +1,167 @@
-# QTip Coding Challenge
+# QTip Solution
 
-## Table of Contents
-
-- [Expected Outputs](#expected-outputs)
-- [Overview](#overview)
-- [Requirements](#requirements)
-  - [1. Frontend](#1-frontend)
-  - [2. Backend](#2-backend)
-  - [3. Database](#3-database)
-- [Optional Extension: Multiple Classification Types](#optional-extension-multiple-classification-types)
-- [Evaluation Criteria](#evaluation-criteria)
-- [Deployment](#deployment)
-- [Submission](#submission)
-
----
-
-## Expected Outputs
-
-By the end of this challenge, you should deliver:
-
-### 1. Working Application
-A fully functional system accessible via:
-```bash
-docker compose up
-```
-
-### 2. User Experience
-- A web interface with a multiline text input
-- Real-time visual detection of email addresses (underlined with tooltip)
-- A submit button that sends text to the backend
-- A statistics panel showing the total count of PII emails detected across all submissions
-
-### 3. Backend Processing
-- Detection and classification of email addresses with the tag `"pii.email"`
-- Tokenization of detected emails (replacing them with unique tokens)
-- Persistence of both tokenized text and classification records
-- API endpoint(s) for retrieving statistics
-
-### 4. Data Architecture
-- Database schema supporting tokenized submissions and classification vault
-- Clear separation between tokenized content and sensitive values
-
-### 5. Documentation
-A README explaining:
-- How to run the application
-- Architectural decisions made
-- Any assumptions or trade-offs
-- (Optional) Implementation notes for extensions
-
----
-
-## Overview
-
-Users frequently paste sensitive information into applications without realizing it. Your task is to build a prototype system called **QTip** that detects, classifies, and tokenizes sensitive data—functioning as a "data spellchecker" for personally identifiable information (PII).
-
-The core concept is **data protection through tokenization**: when sensitive information is detected, it should be replaced with tokens, allowing the system to maintain context and analytics while handling the actual sensitive values securely.
-
-### Objectives
-
-This challenge evaluates your ability to:
-- Design and implement end-to-end solutions
-- Write clean, maintainable code
-- Make pragmatic architectural decisions
-- Balance trade-offs appropriately
-
-### Scope
-
-This is intentionally a small, focused challenge. You should be able to complete it in a few hours. You are free to choose your own architecture, folder structure, and implementation patterns.
-
-### Need Help?
-
-**Please don't struggle in silence.** If you encounter blockers, have questions about requirements, or need clarification on any aspect of the challenge, reach out to us. We value communication and the ability to ask for help when needed—these are important professional qualities.
-
----
-
-## Requirements
-
-### 1. Frontend
-
-Build a web interface with the following components:
-
-#### Text Input Area
-- Multiline text input that accepts user typing and pasting
-- Real-time detection of email addresses
-- Visual indication: underline detected emails (squiggly or wavy style)
-- Tooltip on hover: Display **"PII – Email Address"**
-- Implementation approach is your choice (contenteditable, overlays, etc.)
-
-#### Submit Button
-- Triggers submission of the complete text content to the backend
-
-#### Statistics Panel
-Display a panel showing:
-
-```
-Total PII emails submitted: X
-```
-
-**Requirements:**
-- Count must be retrieved from the backend
-- Must persist across page reloads
-- Must update after each submission
-
----
-
-### 2. Backend
-
-Implement the following processing pipeline for submitted text:
-
-#### Detection
-Identify all email addresses in the submitted text.
-
-#### Classification
-Assign the classification tag **`"pii.email"`** to each detected email address.
-
-#### Tokenization
-The key requirement is **tokenization for data protection**:
-- Replace each detected email address with a unique token
-- Each email must map to a distinct token
-- This allows the text content to be safely processed and stored while maintaining structure
-- Token format is your choice (e.g., `{{TKN-abc123}}`, `__emailToken1__`)
-
-#### Persistence
-Design your data storage to support the tokenization model:
-
-1. **Submission Record**: Store the tokenized version of the text (emails replaced by tokens)
-2. **Classification Records**: Store metadata about detected sensitive data (one record per email):
-   - The unique token (links back to the tokenized text)
-   - The original email value (for the vault/classification store)
-   - The classification tag (`"pii.email"`)
-
-This separation allows you to handle sensitive values differently from the tokenized content.
-
-#### API Endpoints
-Provide an endpoint that returns:
-- The total count of all PII email items submitted across all submissions
-
-**Implementation:** You are free to structure the backend as you see fit (Minimal APIs, MVC, layered architecture, etc.).
-
----
-
-### 3. Database
-
-#### Database Selection
-Use any relational database (SQLite, PostgreSQL, SQL Server, etc.).
-
-#### Data Model
-Design a schema that supports the tokenization architecture:
-- **Tokenized submissions**: Store the processed text with tokens in place of sensitive data
-- **Classification vault**: Store the detected sensitive items with their tokens and metadata
-
-This approach separates the usage context (tokenized text) from the sensitive values (classification records).
-
-Schema design is your choice. Prioritize clarity and maintainability.
-
----
-
-## Optional Extension: Multiple Classification Types
-
-**This is entirely optional.** If you choose to implement it, extend the system to support multiple types of sensitive data beyond email addresses.
-
-### Requirements
-
-Allow configuration of multiple classification types, where each type includes:
-- A tag name
-- A detection mechanism (implementation approach is your choice)
-
-**Example classification types:**
-
-| Tag Name         | Data Type       |
-|------------------|-----------------|
-| `finance.iban`   | IBAN numbers    |
-| `pii.phone`      | Phone numbers   |
-| `security.token` | API keys/tokens |
-
-### Implementation
-
-The backend should:
-1. Detect all configured data types in the submitted text
-2. Tokenize each detected match (similar to email handling)
-3. Persist classifications with their appropriate tags
-
-### Configuration Management
-
-You do **not** need to build a UI for managing classification rules. Acceptable approaches include:
-- Hard-coded configuration
-- JSON configuration files
-- Database-seeded rules
-
-**If you implement this extension, document your approach and design decisions in your submission README.**
-
----
-
-## Evaluation Criteria
-
-### What We Value
-
-- **Clear thinking**: Logical approach to problem-solving
-- **Code quality**: Clean, maintainable backend implementation
-- **Correctness**: Accurate tokenization logic and data detection
-- **Functional UI**: Real-time highlighting that works as specified
-- **End-to-end integration**: Complete, working data flow from frontend to database
-- **Pragmatic decisions**: Sensible trade-offs appropriate for the scope
-- **Communication**: Willingness to ask questions and seek clarification when needed
-- **Deployment**: Working Docker Compose setup
-
-### What We Do NOT Expect
-
-- Polished visual design or styling
-- Production-grade error handling or edge case coverage
-- Comprehensive test suites (though welcome if you choose to include them)
-- Enterprise architecture patterns or overengineering
-
-### Time Investment
-
-This challenge is designed to be completed in **a few focused hours**. It is not intended to be a weekend-long project.
-
----
-
-## Deployment
-
-### Docker Compose Setup
-
-Your submission must include a Docker Compose configuration that orchestrates:
-- Backend service
-- Database service
-- Frontend service
-
-Running the following command should start the complete application:
+## Running the Application
 
 ```bash
-docker compose up
+docker compose up --build
+```
+
+Then open [http://localhost:3000](http://localhost:3000)
+
+To stop:
+```bash
+docker compose down
+```
+
+To reset the database:
+```bash
+docker compose down -v
 ```
 
 ---
 
-## Submission
+## Architecture Overview
 
-### Required Deliverables
+```
+┌─────────────────┐     ┌─────────────────┐     ┌─────────────────┐
+│    Frontend     │────▶│     Backend     │────▶│   PostgreSQL    │
+│  React + Vite   │     │  .NET 8 API     │     │                 │
+│  (nginx:80)     │     │  (port 8080)    │     │  (port 5434)    │
+└─────────────────┘     └─────────────────┘     └─────────────────┘
+      :3000                   :5001
+```
 
-Please submit all the the following via a public Github repository that we can access:
+### Technology Choices
 
-1. **Source code**
-   - Frontend implementation
-   - Backend implementation
-
-2. **Docker Compose configuration**
-   - Complete setup to run all services
-
-3. **Documentation (README)**
-   - Instructions for running the application
-   - Architectural decisions and assumptions
-   - Trade-offs or shortcuts taken
-   - (Optional) Implementation notes for the optional extension
+| Layer | Technology | Rationale |
+|-------|------------|-----------|
+| Frontend | React + TypeScript + Vite | Type safety, fast development |
+| Backend | .NET 8 Minimal APIs | Clean, good for small focused APIs |
+| Database | PostgreSQL | Reliable, great Docker support |
+| Deployment | Docker Compose | Single command startup as required |
 
 ---
 
-## Closing Notes
+## Data Model
 
-We prioritize understanding your thought process and problem-solving approach over feature completeness. Focus on demonstrating clear thinking and sound engineering judgment within the specified scope.
+The schema separates tokenized content from sensitive values:
+
+```
+┌──────────────────────────┐       ┌──────────────────────────┐
+│      Submissions         │       │    Classifications       │
+├──────────────────────────┤       ├──────────────────────────┤
+│ Id (PK)                  │◀──────│ SubmissionId (FK)        │
+│ TokenizedText            │       │ Id (PK)                  │
+│ CreatedAt                │       │ Token                    │
+└──────────────────────────┘       │ OriginalValue            │
+                                   │ ClassificationTag        │
+                                   │ CreatedAt                │
+                                   └──────────────────────────┘
+```
+
+**Example transformation:**
+
+| Input | Stored in Submissions | Stored in Classifications |
+|-------|----------------------|---------------------------|
+| `Contact tiaan@test.com` | `Contact {{TKN-a1b2c3d4}}` | token: `{{TKN-a1b2c3d4}}`, original: `tiaan@test.com`, tag: `pii.email` |
+
+---
+
+## API Endpoints
+
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| `/api/submissions` | POST | Submit text for PII detection and tokenization |
+| `/api/statistics` | GET | Get total count of PII emails detected |
+
+### POST /api/submissions
+
+**Request:**
+```json
+{ "text": "Contact tiaan@example.com for details" }
+```
+
+**Response:**
+```json
+{ "submissionId": "uuid", "piiCount": 1 }
+```
+
+### GET /api/statistics
+
+**Response:**
+```json
+{ "totalPiiEmails": 42 }
+```
+
+---
+
+## Architectural Decisions
+
+### 1. Minimal API over MVC Controllers
+I chose .NET 8 Minimal APIs for reduced boilerplate. For a small API with 2 endpoints, full MVC would be overkill.
+
+### 2. Direct EF Core usage (no repository pattern)
+The scope is small enough that abstracting data access adds complexity without benefit. Direct `DbContext` usage in endpoint handlers keeps the code simple and readable.
+
+### 3. Overlay-based highlighting
+I used a transparent textarea over a styled backdrop div for email highlighting. This is simpler than `contenteditable` and avoids cursor/selection issues.
+
+### 4. Auto-migration on startup
+Database migrations run automatically when the backend starts. Appropriate for a demo application, production would use explicit migration deployment.
+
+### 5. Nginx as frontend server + API proxy
+The frontend nginx container serves static files and proxies `/api/*` requests to the backend. This removes CORS complexity in production and mirrors a typical deployment setup.
+
+---
+
+## Trade-offs and Shortcuts
+
+| Decision | Trade-off |
+|----------|-----------|
+| Single regex for email detection | Good enough for demonstration, production would need RFC 5322 compliant parsing |
+| No input validation | Assumed valid input for scope, production would validate request bodies |
+| No error handling UI | Errors log to console, production would show user-friendly messages |
+| No tests | Time constraint, would add unit tests for tokenization logic and integration tests for API |
+| Hardcoded token format | `{{TKN-xxxxxxxx}}` format is fixed, could be configurable |
+
+---
+
+## Project Structure
+
+```
+qtip-valuation/
+├── docker-compose.yml
+├── backend/
+│   └── QTip.Api/
+│       ├── Program.cs              # API endpoints + service logic
+│       ├── Data/
+│       │   ├── AppDbContext.cs     # EF Core context
+│       │   ├── Submission.cs       # Tokenized text entity
+│       │   └── Classification.cs   # PII vault entity
+│       ├── Models/
+│       │   ├── SubmitRequest.cs
+│       │   ├── SubmitResponse.cs
+│       │   └── StatisticsResponse.cs
+│       ├── Migrations/
+│       └── Dockerfile
+└── frontend/
+    ├── src/
+    │   ├── App.tsx                 # Main component
+    │   ├── api.ts                  # API client
+    │   └── components/
+    │       ├── TextInput.tsx       # Input with highlighting
+    │       └── StatsPanel.tsx      # Statistics display
+    ├── nginx.conf
+    └── Dockerfile
+```
+
+---
+
+## Optional Extension
+
+The current design supports multiple classification types by:
+- Adding more regex patterns to the detection logic
+- Using different `ClassificationTag` values (for example `pii.phone`, `finance.iban`)
+- No schema changes required
+
+This would be implemented as a configuration object rather than a full plugin system, keeping complexity appropriate for the scope.
